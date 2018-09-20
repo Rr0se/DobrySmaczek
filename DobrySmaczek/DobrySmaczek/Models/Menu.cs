@@ -7,8 +7,8 @@ namespace DobrySmaczek.Models
 {
     public class Menu
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public List<Meal> Meals { get; set; }
-        public List<TypeOfFood> TypeOfFoods { get; set; }
+        
     }
 }

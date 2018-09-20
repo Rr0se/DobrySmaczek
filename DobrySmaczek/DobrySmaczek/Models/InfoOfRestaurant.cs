@@ -7,12 +7,13 @@ namespace DobrySmaczek.Models
 {
     public class InfoOfRestaurant
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public DateTime Open { get; set; }
         public DateTime Close { get; set; }
         public double DeliveryCosts { get; set; }
         public double MinOrderAmount { get; set; }
         public string Adress { get; set; }
         public string PhoneNumber { get; set; }
+
     }
 }
