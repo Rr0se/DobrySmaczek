@@ -14,7 +14,11 @@ namespace DobrySmaczek.Models
         public double MinOrderAmount { get; set; }
         public double DeliveryCosts { get; set; }
 
-        
+        public double Long { get; set; }
+        public double Lat { get; set; }
+        public double Radius { get; set; }
+
+
         public List<Menu> Menu { get; set; }
         public InfoOfRestaurant InfoOfRestaurants { get; set; }
         public List<Reviews> Reviews { get; set; }

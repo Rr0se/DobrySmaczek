@@ -11,6 +11,9 @@ namespace DobrySmaczek.Models
         public string Name { get; set; }
         public string Components { get; set; }
         public double  Price { get; set; }
-        public TypeOfFood TypeOfFoods { get; set; }
+        public TypeOfFoods TypeOfFoods { get; set; }
     }
+
+    
+
 }

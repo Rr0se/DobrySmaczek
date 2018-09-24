@@ -1,5 +1,6 @@
 ﻿using DobrySmaczek.Entities;
 using DobrySmaczek.Models;
+using DobrySmaczek.Services.User;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,23 @@ namespace DobrySmaczek.Controllers
     public class UserController : Controller
     {
         private readonly DataBaseContext context;
+        private readonly IUserService userService;
 
-        public UserController(DataBaseContext context)
+        public UserController(DataBaseContext context, IUserService _userService)
         {
             this.context = context;
+            userService = _userService;
         }
+
+
+        public IActionResult Register()
+        {
+            var output = userService.Register();
+            return StatusCode(200, output);
+        }
+
+
+
         private Models.User GenerateUser(int Id)
         {
             var user = context.Users.FirstOrDefault(x => x.Id == Id);
@@ -39,16 +52,18 @@ namespace DobrySmaczek.Controllers
             return output;
         }
 
-        [HttpGet("GetUser")]
-        public IActionResult GetUser(int Id)
-        {
-            var output = new User
-            {
-                Users = GenerateUser(Id),
-            };
-            return StatusCode(200, output);
+        //[HttpGet("GetUser")]
+        //public IActionResult GetUser(int Id)
+        //{
+        //    var output = new User
+        //    {
+        //        Users = GenerateUser(Id),
+        //    };
+        //    return StatusCode(200, output);
 
-        }
+        //}
+
+
 
     }
 }
