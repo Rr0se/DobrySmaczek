@@ -39,7 +39,7 @@ namespace DobrySmaczek.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserModel userModel)
         {
-            var user = _userService.Authenticate(userModel.Username, userModel.Password);
+            var user = _userService.Authenticate(userModel.UserName, userModel.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -62,7 +62,7 @@ namespace DobrySmaczek.Controllers
             return Ok(new
             {
                 Id = user.Id,
-                Username = user.Username,
+                Username = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Token = tokenString

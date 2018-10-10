@@ -10,6 +10,8 @@ namespace DobrySmaczek.Models
         public int Id { get; set; }
         public string Name { get; set; }
         //public TypeOfFoods TypeOfFoods { get; set; }
+
+        public ICollection<MenuTypeOfFood> MenuTypeOfFoods { get; set; }
     }
 
     //public enum TypeOfFoods {Kuchnia_Polska, Kuchnia_Włoska, Kuchnia_Turecka, Kuchnia_Japońska, Kuchnia_Amerykańska,

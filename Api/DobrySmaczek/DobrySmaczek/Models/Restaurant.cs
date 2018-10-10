@@ -19,9 +19,13 @@ namespace DobrySmaczek.Models
         public double Radius { get; set; }
 
 
-        public List<Menu> Menu { get; set; }
+        public Menu Menu { get; set; }
         public InfoOfRestaurant InfoOfRestaurants { get; set; }
-        public List<Reviews> Reviews { get; set; }
+        public List<Review> Reviews { get; set; }
+
+        public ICollection<RestaurantCategoryFood> RestaurantCategoryFoods { get; set; }
+        //public ICollection<RestaurantInfoOfRestaurant> RestaurantInfoOfRestaurants { get; set; }
+        //public ICollection<RestaurantMenu> RestaurantMenus { get; set; }
 
     }
 }

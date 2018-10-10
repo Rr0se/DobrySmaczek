@@ -18,5 +18,8 @@ namespace DobrySmaczek.Models
         public string HouseNumber { get; set; }
         public string PhoneNumber { get; set; }
 
+        public Restaurant Restaurant { get; set; }
+
+
     }
 }

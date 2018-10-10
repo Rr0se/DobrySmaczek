@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 
 namespace DobrySmaczek.Models
 {
-    public class Reviews
+    public class Review
     {
         public int Id { get; set; }
         public int RatingDelivery { get; set; }
         public int RatingFood { get; set; }
         public int UserId { get; set; }
+
+        public Restaurant Restaurant { get; set; }
     }
 }

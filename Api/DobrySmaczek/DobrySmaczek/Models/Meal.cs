@@ -10,8 +10,10 @@ namespace DobrySmaczek.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Components { get; set; }
-        public double  Price { get; set; }
+        public decimal  Price { get; set; }
         public TypeOfFood TypeOfFood { get; set; }
+
+        public ICollection<MenuMeal> MenuMeals { get; set; }
     }
 
     

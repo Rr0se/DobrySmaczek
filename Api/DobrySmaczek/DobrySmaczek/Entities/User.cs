@@ -8,7 +8,7 @@ namespace DobrySmaczek.Entities
 {
     public class User
     {
-        [Key]
+        
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Wpisz Imie")]
@@ -40,6 +40,8 @@ namespace DobrySmaczek.Entities
 
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+
+        public string access_token { get; set; }
 
         public Users Users { get; set; }
 

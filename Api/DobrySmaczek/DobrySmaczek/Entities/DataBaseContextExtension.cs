@@ -102,8 +102,8 @@ namespace DobrySmaczek.Entities
 
                     var meals = new List<Meal>()
                     {
-                        new Meal(){Name="Burger",Components="Bułka,Mięso wołowe 100%, sałata, pomidor, ogórek, sosy",Price=12.0, TypeOfFood=typeoffoods[0] },
-                        new Meal(){ Name="Zapiekanka",Components="Bułka,szynka,ser,sos",Price=5.0, TypeOfFood=typeoffoods[5]},
+                        new Meal(){Name="Burger",Components="Bułka,Mięso wołowe 100%, sałata, pomidor, ogórek, sosy",Price=12, TypeOfFood=typeoffoods[0] },
+                        new Meal(){ Name="Zapiekanka",Components="Bułka,szynka,ser,sos",Price=5, TypeOfFood=typeoffoods[5]},
                         new Meal(){ Name="Sałatka Grecka",Components="Sałata,Pomidor,Ogórek,Oliwki,Cebula,Ser Feta",Price=10, TypeOfFood=typeoffoods[1]},
                         new Meal(){ Name="Pizza Capriciosa",Components="Ciasto,Sos,Ser,Szybka,Pieczarki",Price=22, TypeOfFood=typeoffoods[2]},
                         new Meal(){ Name="Shoarma Klasyczna",Components="Pierś z kurczaka,Frytki,Pita,Zestaw surówek",Price=20, TypeOfFood=typeoffoods[3]},
@@ -132,15 +132,15 @@ namespace DobrySmaczek.Entities
 
                     };
 
-                    var menuRestaurant = new List<Meal>()
+                    var menuRestaurants = new List<Meal>()
                     {
-                    new Meal(){Name="Burger",Components="Bułka,Mięso wołowe 100%, sałata, pomidor, ogórek, sosy",Price=12.0, TypeOfFood=typeoffoods[0] },
-                    new Meal(){ Name="Zapiekanka",Components="Bułka,szynka,ser,sos",Price=5.0, TypeOfFood=typeoffoods[5]},
+                    new Meal(){Name="Burger",Components="Bułka,Mięso wołowe 100%, sałata, pomidor, ogórek, sosy",Price=12, TypeOfFood=typeoffoods[0] },
+                    new Meal(){ Name="Zapiekanka",Components="Bułka,szynka,ser,sos",Price=5, TypeOfFood=typeoffoods[5]},
                     };
 
                     var menus = new List<Menu>()
                     {
-                    new Menu(){ Meals = menuRestaurant },
+                    new Menu(){ Meals = menuRestaurants },
                     };
 
 

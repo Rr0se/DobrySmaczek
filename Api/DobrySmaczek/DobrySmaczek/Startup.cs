@@ -37,7 +37,7 @@ namespace DobrySmaczek
             services.AddDbContext<DataBaseContext>(x => x.UseInMemoryDatabase("TestDb"));
             services.AddMvc();
             services.AddAutoMapper();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserService, IUserService>();
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -79,7 +79,7 @@ namespace DobrySmaczek
             });
 
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, IUserService>();
 
             var connectionString = @"Server=DESKTOP-18VF6FQ\SQLEXPRESS;Database=DbUserGenerator;Trusted_Connection=True;";
             services.AddDbContext<DataBaseContext>(o => o.UseSqlServer(connectionString));

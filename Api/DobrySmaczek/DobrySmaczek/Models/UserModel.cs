@@ -8,7 +8,7 @@ namespace DobrySmaczek.Models
 {
     public class UserModel
     {
-        [Key]
+        
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Wpisz Imie")]
@@ -38,8 +38,9 @@ namespace DobrySmaczek.Models
         [Required(ErrorMessage = "Wpisz Numer domu")]
         public string HouseNumber { get; set; }
 
-        public string Username { get; set; }
         public string Password { get; set; }
+
+        public string access_token { get; set; }
 
         public Users Users { get; set; }
 
