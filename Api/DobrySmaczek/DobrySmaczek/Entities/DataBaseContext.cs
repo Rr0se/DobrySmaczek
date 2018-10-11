@@ -28,7 +28,7 @@ namespace DobrySmaczek.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Many to Many
+            //----------------Many to Many----------------
             
 
             modelBuilder.Entity<RestaurantCategoryFood>()
@@ -80,13 +80,13 @@ namespace DobrySmaczek.Entities
                 .HasForeignKey(pc => pc.TypeOfFoodId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // One to Many
+            //--------------- One to Many------------------
             
             modelBuilder.Entity<Restaurant>()
                 .HasMany(rev => rev.Reviews)
                 .WithOne(res => res.Restaurant);
 
-            //One to One 
+            //----------------One to One ------------------
 
             modelBuilder.Entity<Restaurant>()
                 .HasOne(me => me.Menu)
