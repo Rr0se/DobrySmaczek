@@ -144,29 +144,30 @@ namespace DobrySmaczek.Services.User
                 return true;
             }
 
-        //IEnumerable<Entities.User> IUserService.GetAll()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        IEnumerable<Entities.User> IUserService.GetAll()
+        {
+            throw new NotImplementedException();
+        }
 
-        //User IUserService.GetById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        User IUserService.GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public User Create(Entities.User user, string password)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public User Create(Entities.User user, string password)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public void Update(Entities.User user, string password = null)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public void Update(Entities.User user, string password = null)
+        {
+            throw new NotImplementedException();
+        }
 
-        //void IUserService.Create(User user, string password)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        void IUserService.Create(User user, string password)
+        {
+            throw new NotImplementedException();
+        }
+        
     }
 }
