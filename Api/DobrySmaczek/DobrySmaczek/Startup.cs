@@ -36,7 +36,7 @@ namespace DobrySmaczek
             services.AddCors();
             services.AddDbContext<DataBaseContext>(x => x.UseInMemoryDatabase("TestDb"));
             services.AddMvc();
-            services.AddAutoMapper();
+            //services.AddAutoMapper();
             services.AddTransient<IUserService, IUserService>();
 
             var appSettingsSection = Configuration.GetSection("AppSettings");

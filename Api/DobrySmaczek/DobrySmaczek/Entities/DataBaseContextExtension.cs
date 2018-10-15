@@ -13,23 +13,23 @@ namespace DobrySmaczek.Entities
         {
             var context = serviceProvider.GetRequiredService<DataBaseContext>();
             context.Database.EnsureCreated();
-            if (!context.Users.Any())
+            if (!context.AppUsers.Any())
             {
                 try
                 {
-                    var users = new List<User>()
+                    var users = new List<AppUser>()
                     {
-                        new User(){FirstName = "Jan", LastName = "Kowalski", UserName = "JaKowal" , Email = "JanKowalski@gmail.com", PhoneNumber = "123456789",  Users=Users.User } ,
-                        new User(){FirstName = "Anna", LastName = "Lubińska", UserName = "Lubi" , Email = "AnnaLubi@gmail.com", PhoneNumber = "555444333",  Users=Users.User  } ,
-                        new User(){FirstName = "Marta", LastName = "Mazurkiewicz", UserName = "Mazur" , Email = "Marta.Mazurkiewicz94@gmail.com", PhoneNumber = "333666555",  Users=Users.User  } ,
-                        new User(){FirstName = "Marcin", LastName = "Starostecki", UserName = "Cinuś" , Email = "Marcin_Starostec@gmail.com", PhoneNumber = "222333444",Users=Users.User  } ,
-                        new User(){FirstName = "Paweł", LastName = "Stryjewski", UserName = "Stryju" , Email = "PawelStryju@gmail.com", PhoneNumber = "777555444",  Users=Users.User  } ,
-                        new User(){FirstName = "Damian", LastName = "Wiewióra", UserName = " Wiewiórka" , Email = "Damian_Wiewiora@gmail.com", PhoneNumber = "999777666",  Users=Users.User  } ,
-                        new User(){FirstName = "Alex", LastName = "Mazurkiewicz", UserName = "MłodyMazur" , Email = "AlexMazur@gmail.com", PhoneNumber = "666544455",  Users=Users.User  } ,
-                        new User(){FirstName = "Krystyna", LastName = "Gonera", UserName = "Gonerka" , Email = "KrystynaGonera45@gmail.com", PhoneNumber = "898070505",  Users=Users.User  } ,
-                        new User(){FirstName = "Krzysztof", LastName = "Jaszczołt", UserName = "Jaszczołcik999" , Email = "KrzysiuJaszcz@gmail.com", PhoneNumber = "674839475",  Users=Users.User  } ,
-                        new User(){FirstName = "Adrianna", LastName = "Jeznach", UserName = "AdriannaJ123" , Email = "JeznachAdrianna@gmail.com", PhoneNumber = "930485748",  Users=Users.User  } ,
-                        new User(){FirstName = "Michał", LastName = "Prosiak", UserName = "Świnka_1" , Email = "Prosiaczek123@gmail.com", PhoneNumber = "853847323",  Users=Users.User  }
+                        new AppUser(){FirstName = "Jan", LastName = "Kowalski", UserName = "JaKowal" , Email = "JanKowalski@gmail.com", PhoneNumber = "123456789",  Users=Users.User } ,
+                        new AppUser(){FirstName = "Anna", LastName = "Lubińska", UserName = "Lubi" , Email = "AnnaLubi@gmail.com", PhoneNumber = "555444333",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Marta", LastName = "Mazurkiewicz", UserName = "Mazur" , Email = "Marta.Mazurkiewicz94@gmail.com", PhoneNumber = "333666555",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Marcin", LastName = "Starostecki", UserName = "Cinuś" , Email = "Marcin_Starostec@gmail.com", PhoneNumber = "222333444",Users=Users.User  } ,
+                        new AppUser(){FirstName = "Paweł", LastName = "Stryjewski", UserName = "Stryju" , Email = "PawelStryju@gmail.com", PhoneNumber = "777555444",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Damian", LastName = "Wiewióra", UserName = " Wiewiórka" , Email = "Damian_Wiewiora@gmail.com", PhoneNumber = "999777666",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Alex", LastName = "Mazurkiewicz", UserName = "MłodyMazur" , Email = "AlexMazur@gmail.com", PhoneNumber = "666544455",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Krystyna", LastName = "Gonera", UserName = "Gonerka" , Email = "KrystynaGonera45@gmail.com", PhoneNumber = "898070505",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Krzysztof", LastName = "Jaszczołt", UserName = "Jaszczołcik999" , Email = "KrzysiuJaszcz@gmail.com", PhoneNumber = "674839475",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Adrianna", LastName = "Jeznach", UserName = "AdriannaJ123" , Email = "JeznachAdrianna@gmail.com", PhoneNumber = "930485748",  Users=Users.User  } ,
+                        new AppUser(){FirstName = "Michał", LastName = "Prosiak", UserName = "Świnka_1" , Email = "Prosiaczek123@gmail.com", PhoneNumber = "853847323",  Users=Users.User  }
 
                     };
 
@@ -140,11 +140,11 @@ namespace DobrySmaczek.Entities
 
                     var menus = new List<Menu>()
                     {
-                    new Menu(){ Meals = menuRestaurants },
+                    //new Menu(){ Meals = menuRestaurants },
                     };
 
 
-                    context.Users.AddRange(users);
+                    context.AppUsers.AddRange(users);
                     context.TypeOfFoods.AddRange(typeoffoods);
                     context.CategoryFoods.AddRange(categoryfood);
                     context.Meals.AddRange(meals);

@@ -15,12 +15,12 @@ namespace DobrySmaczek.Entities
             //Database.Migrate();
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<TypeOfFood> TypeOfFoods { get; set; }
         public DbSet<CategoryFood> CategoryFoods { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<AppOrder> Orders { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<InfoOfRestaurant> InfoOfRestaurants { get; set; }

@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DobrySmaczek.Entities;
+
 
 namespace DobrySmaczek.Services.User
 {
     public interface IUserService
     {
-        User Authenticate(string UserName, string password);
-        IEnumerable<Entities.User> GetAll();
-        User GetById(int id);
-        User Create(Entities.User user, string password);
-        void Update(Entities.User user, string password = null);
-        void Delete(int id);
-        void Create(User user, string password);
-        void Update(User user, string password);
+        GlobalServiceModel<AppUser> Authenticate(string UserName, string password);
+        GlobalServiceModel<IEnumerable<AppUser>> GetAll();
+        GlobalServiceModel<AppUser> GetById(int id);
+        GlobalServiceModel <AppUser> Create(AppUser user, string password);
+        GlobalServiceModel Update(AppUser user, string password = null);
+        GlobalServiceModel Delete(int id);
+        GlobalServiceModel Create1(AppUser user, string password);
+        GlobalServiceModel Update1(AppUser user, string password);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DobrySmaczek.Entities
 {
-    public class User
+    public class AppUser
     {
         
         public int Id { get; set; }

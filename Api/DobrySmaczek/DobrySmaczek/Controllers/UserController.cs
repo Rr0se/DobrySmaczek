@@ -44,29 +44,41 @@ namespace DobrySmaczek.Controllers
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            var jwtKey = AppSettingsService.AppSettingsService.Secret;
+            var jwtIssuer = AppSettingsService.AppSettingsService.IssuserName;
+            var jwtAudience = AppSettingsService.AppSettingsService.AudienceName;
+            var jwtExpiry = int.Parse(AppSettingsService.AppSettingsService.ExpiredSecondTime);
 
-            // return basic user info (without password) and token to store client side
-            return Ok(new
+            var claims = new List<System.Security.Claims.Claim>
             {
-                Id = user.Id,
-                Username = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Token = tokenString
-            });
+                new System.Security.Claims.Claim(TokenClaim.UserId.ToString(), user.Id.ToString()),
+                //new System.Security.Claims.Claim(TokenClaim.IdentyficationGuid.ToString(), user.IdentyficationGuid.ToString()),
+                //new System.Security.Claims.Claim(TokenClaim.IsOperator.ToString(), user.IsOperator.ToString()),
+                //new System.Security.Claims.Claim(TokenClaim.UserRoleId.ToString(), ((int)user.UserType).ToString()),
+                new System.Security.Claims.Claim(ClaimTypes.Name, user.Id.ToString()),
+                new System.Security.Claims.Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+
+            };
+
+            if (user.ClaimsUser != null)
+            {
+                var userClaims = user.ClaimsUser.Split(',').ToList();
+                foreach (var claim in userClaims)
+                {
+                    claims.Add(new System.Security.Claims.Claim("UserClaim", claim));
+                }
+            }
+
+            var token = new JwtSecurityToken(
+                issuer: jwtIssuer,
+                audience: jwtAudience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(jwtExpiry),
+                signingCredentials: new SigningCredentials(
+                    JwtSecurityKey.Create(jwtKey),
+                    SecurityAlgorithms.HmacSha256));
+            var ret = new JwtToken(token).Value;
+            return new JwtToken(token).Value;
         }
 
         [AllowAnonymous]
@@ -74,7 +86,7 @@ namespace DobrySmaczek.Controllers
         public IActionResult Register([FromBody]UserModel userModel)
         {
             // map dto to entity
-            var user = _mapper.Map<User>(userModel);
+            var user = _mapper.Map<AppUser>(userModel);
 
             try
             {
@@ -109,7 +121,7 @@ namespace DobrySmaczek.Controllers
         public IActionResult Update(int id, [FromBody]UserModel userModel)
         {
             // map dto to entity and set id
-            var user = _mapper.Map<User>(userModel);
+            var user = _mapper.Map<AppUser>(userModel);
             user.Id = id;
 
             try

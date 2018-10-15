@@ -12,8 +12,8 @@ namespace DobrySmaczek.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserModel>();
-            CreateMap<UserModel, User>();
+            CreateMap<AppUser, UserModel>();
+            CreateMap<UserModel, AppUser>();
         }
     }
 }

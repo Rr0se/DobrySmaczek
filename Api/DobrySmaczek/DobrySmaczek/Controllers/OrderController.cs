@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web.Http;
 
 namespace DobrySmaczek.Controllers
 {
@@ -17,33 +16,30 @@ namespace DobrySmaczek.Controllers
         {
             this.context = context;
         }
-        public IEnumerable<Order> GetOrders()
-        {
-            return context.Orders.Where(o => o.UserId == User.Id.Name);
-        }
-        public Order GetOrder(int id)
-        {
-            Order order = context.Orders.Include("OrderDetails.Meal")
-                .First(o => o.Id == id && o.UserId == User.Id.Name);
-            if (order == null)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
-            }
+        //public IEnumerable<Order> GetOrders()
+        //{
+        //    return context.Orders.Where(o => o.UserId == AppUser.Id.Name);
+        //}
+        //public Entities.Order GetOrder(int id)
+        //{
+        //    Order order = context.Orders.Include("OrderDetails.Meal")
+        //        .First(o => o.Id == id && o.UserId == AppUser.Id.Name);
 
-            return new Order()
-            {
-                Details = from d in order.OrderDetails
-                          select new Order.Detail()
-                          {
-                              Id = d.Meal.Id,
-                              Meal = d.Meal.Name,
-                              UserId = d.Meal.UserId,
-                              DeliveryCosts = d.DeliveryCosts,
-                              TotalAmount = d.TotalAmount
-                              
-                          }
-            };
-        }
+
+        //    return new Entities.Order()
+        //    {
+        //        Details = from d in order.OrderDetails
+        //                  select new Entities.Order.Detail()
+        //                  {
+        //                      Id = d.Meal.Id,
+        //                      Meal = d.Meal.Name,
+        //                      User = d.Meal.User,
+        //                      DeliveryCosts = d.DeliveryCosts,
+        //                      TotalAmount = d.TotalAmount
+
+        //                  }
+        //    };
+        //}
 
     }
 }

@@ -9,21 +9,21 @@ namespace DobrySmaczek.Services.User
 
 {
     
-    public class UserService :IUserService
+    public class UserService : IUserService
     {
-            private DataBaseContext _context;
+        private DataBaseContext _context;
 
-            public UserService(DataBaseContext context)
-            {
-                _context = context;
-            }
+        public UserService(DataBaseContext context)
+        {
+            _context = context;
+        }
 
-            public User Authenticate(string UserName, string password)
+        public GlobalServiceModel <AppUser> Authenticate(string UserName, string password)
             {
                 if (string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(password))
                     return null;
 
-                var user = _context.Users.SingleOrDefault(x => x.UserName == UserName);
+                var user = _context.AppUsers.SingleOrDefault(x => x.UserName == UserName);
 
                 // check if username exists
                 if (user == null)
@@ -33,27 +33,39 @@ namespace DobrySmaczek.Services.User
                 if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                     return null;
 
-                // authentication successful
-                return user;
-            }
-
-            public IEnumerable<Users> GetAll()
+            // authentication successful
+            return new GlobalServiceModel<AppUser>
             {
-                return _context.User;
-            }
+                ServiceResponse = ServiceResponseEnum.Ok
+            };
+        }
 
-            public Users GetById(int id)
+        public GlobalServiceModel<IEnumerable<AppUser>> GetAll()
+        {
+
+            return new GlobalServiceModel<IEnumerable<AppUser>>
             {
-                return _context.User.Find(id);
+                ServiceResponse = ServiceResponseEnum.Ok
+
+            };
+        }
+                
+
+            public GlobalServiceModel <AppUser> GetById(int id)
+            {
+            return new GlobalServiceModel<AppUser>
+            {
+                ServiceResponse = ServiceResponseEnum.Ok
+            };
             }
 
-            public Users Create(User user, string password)
+            public GlobalServiceModel <AppUser> Create(AppUser user, string password)
             {
                 // validation
                 if (string.IsNullOrWhiteSpace(password))
                     throw new AppException("Password is required");
 
-                if (_context.Users.Any(x => x.UserName == user.UserName))
+                if (_context.AppUsers.Any(x => x.UserName == user.UserName))
                     throw new AppException("Username \"" + user.UserName + "\" is already taken");
 
                 byte[] passwordHash, passwordSalt;
@@ -62,30 +74,33 @@ namespace DobrySmaczek.Services.User
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
 
-                _context.Users.Add(user);
+                _context.AppUsers.Add(user);
                 _context.SaveChanges();
 
-                return user;
-            }
-
-            public void Update(User userParam, string password = null)
+            return new GlobalServiceModel<AppUser>
             {
-                var user = _context.Users.Find(userParam.Id);
+                ServiceResponse = ServiceResponseEnum.Ok
+            };
+        }
+
+            public GlobalServiceModel Update(AppUser userParam, string password = null)
+            {
+                var user = _context.AppUsers.Find(userParam.Id);
 
                 if (user == null)
                     throw new AppException("User not found");
 
-                if (userParam.Username != user.UserName)
+                if (userParam.UserName != user.UserName)
                 {
                     // username has changed so check if the new username is already taken
-                    if (_context.Users.Any(x => x.UserName == userParam.Username))
-                        throw new AppException("Username " + userParam.Username + " is already taken");
+                    if (_context.AppUsers.Any(x => x.UserName == userParam.UserName))
+                        throw new AppException("Username " + userParam.UserName + " is already taken");
                 }
 
                 // update user properties
                 user.FirstName = userParam.FirstName;
                 user.LastName = userParam.LastName;
-                user.UserName = userParam.Username;
+                user.UserName = userParam.UserName;
 
                 // update password if it was entered
                 if (!string.IsNullOrWhiteSpace(password))
@@ -97,19 +112,29 @@ namespace DobrySmaczek.Services.User
                     user.PasswordSalt = passwordSalt;
                 }
 
-                _context.Users.Update(user);
+                _context.AppUsers.Update(user);
                 _context.SaveChanges();
-            }
 
-            public void Delete(int id)
+            return new GlobalServiceModel
             {
-                var user = _context.Users.Find(id);
+                ServiceResponse = ServiceResponseEnum.Ok
+            };
+        }
+
+            public GlobalServiceModel Delete(int id)
+            {
+                var user = _context.AppUsers.Find(id);
                 if (user != null)
                 {
-                    _context.Users.Remove(user);
+                    _context.AppUsers.Remove(user);
                     _context.SaveChanges();
                 }
-            }
+
+            return new GlobalServiceModel
+            {
+                ServiceResponse = ServiceResponseEnum.Ok
+            };
+        }
 
             // private helper methods
 
@@ -144,30 +169,14 @@ namespace DobrySmaczek.Services.User
                 return true;
             }
 
-        IEnumerable<Entities.User> IUserService.GetAll()
+        public GlobalServiceModel Create1(AppUser user, string password)
         {
             throw new NotImplementedException();
         }
 
-        User IUserService.GetById(int id)
+        public GlobalServiceModel Update1(AppUser user, string password)
         {
             throw new NotImplementedException();
         }
-
-        public User Create(Entities.User user, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Entities.User user, string password = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IUserService.Create(User user, string password)
-        {
-            throw new NotImplementedException();
-        }
-        
     }
 }

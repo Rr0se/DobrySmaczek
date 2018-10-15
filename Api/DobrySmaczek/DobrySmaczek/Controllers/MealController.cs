@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web.Http;
 
 namespace DobrySmaczek.Controllers
 {
@@ -17,26 +16,22 @@ namespace DobrySmaczek.Controllers
         {
             this.context = context;
         }
-        private IQueryable<Meal> MapMeals()
+        private IQueryable<Models.Meal> MapMeals()
         {
             return from m in context.Meals
-                   select new Meal()
+                   select new Models.Meal()
                    { Id = m.Id, Name = m.Name, Price = m.Price, Components = m.Components };
         }
-        public IEnumerable<Meal> GetMeals()
+        public IEnumerable<Models.Meal> GetMeals()
         {
             return MapMeals().AsEnumerable();
         }
-        public Meal GetMeal(int id)
+        public Models.Meal GetMeal(int id)
         {
             var meal = (from p in MapMeals()
                            where p.Id == 1
                            select p).FirstOrDefault();
-            if (meal == null)
-            {
-                throw new HttpResponseException(
-                    Request.CreateResponse(HttpStatusCode.NotFound));
-            }
+            
             return meal;
         }
         protected override void Dispose(bool disposing)
