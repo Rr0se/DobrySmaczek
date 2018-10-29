@@ -11,8 +11,8 @@ namespace DobrySmaczek.Services.Order
     interface IOrderService
     {
         IEnumerable<AppOrder> GetAll();
-        AppOrder GetById(int Id);
-        AppOrder Create(AppOrder Orders, Users user );
+        AppOrder GetById(int id);
+        AppOrder Create(AppOrder Orders, UserType user);
         void Delete(int id);
 
     }

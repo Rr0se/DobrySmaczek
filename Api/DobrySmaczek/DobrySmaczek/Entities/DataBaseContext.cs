@@ -16,6 +16,7 @@ namespace DobrySmaczek.Entities
         }
 
         public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<AppOrder> AppOrders { get; set; }
         public DbSet<TypeOfFood> TypeOfFoods { get; set; }
         public DbSet<CategoryFood> CategoryFoods { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -24,6 +25,7 @@ namespace DobrySmaczek.Entities
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<InfoOfRestaurant> InfoOfRestaurants { get; set; }
+        public DbSet<UserOrder> UserOrders  { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -85,6 +87,10 @@ namespace DobrySmaczek.Entities
             modelBuilder.Entity<Restaurant>()
                 .HasMany(rev => rev.Reviews)
                 .WithOne(res => res.Restaurant);
+
+            //modelBuilder.Entity<UserOrder>()
+            //    .HasMany(ord => ord.Orders)
+            //    .WithOne(usr => usr.User);
 
             //----------------One to One ------------------
 

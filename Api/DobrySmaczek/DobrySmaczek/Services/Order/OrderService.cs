@@ -1,4 +1,5 @@
 ﻿using DobrySmaczek.Entities;
+using DobrySmaczek.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,44 @@ namespace DobrySmaczek.Services.Order
         {
             _context = context;
         }
+
+        public List<AppOrder> GetAll()
+        {
+            return _context.Orders.ToList();
+        }
+
+        public AppOrder GetById(int id)
+        {
+            return _context.Orders.SingleOrDefault(x => x.Id == id);
+
+        }
+
+        //public AppOrder Create(AppOrder AppOrders, Users user)
+        //{
+        //    var order = _context.AppOrders.Find(AppOrders.Id);
+        //    if(order == null)
+        //        throw new AppException("Order not found");
+        //    if(AppOrders.Id != order.Id)
+        //    {
+        //        if(_context.AppOrders.Any(x => x.Id == AppOrders.Id))
+        //            throw new AppException(AppOrders.Id);
+        //    }
+        //    order.Id = AppOrders.Id;
+        //    //order.Meal = AppOrders.Meal;
+        //    //order.Price = AppOrders.Price;
+
+        //}
+
+        public void Delete(int id)
+        {
+            var order = _context.Orders.Find(id);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+                _context.SaveChanges();
+            }
+        }
+
 
         //public IEnumerable<Order> GetOrders()
         //{

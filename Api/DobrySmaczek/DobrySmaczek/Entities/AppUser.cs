@@ -43,10 +43,18 @@ namespace DobrySmaczek.Entities
 
         public string access_token { get; set; }
 
-        public Users Users { get; set; }
+        public UserType UserType { get; set; }
 
     }
 
-    public enum Users { GlobalAdmin, CompanyAdmin, User }
+    public enum UserType
+    {
+        [Display(Name = "GlobalAdministrator")]
+        GlobalAdministrator = 0,
+        [Display(Name = "CompanyAdministrator")]
+        CompanyAdministrator = 1,
+        [Display(Name = "Użytkownik")]
+        User = 2,
+    }
 
 }

@@ -15,5 +15,6 @@ namespace DobrySmaczek.Entities
 
         }
         public IEnumerable<Detail> Details { get; set; }
+        public int Id { get; set; }
     }
 }

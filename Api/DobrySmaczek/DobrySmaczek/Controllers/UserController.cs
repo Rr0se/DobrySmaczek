@@ -35,51 +35,51 @@ namespace DobrySmaczek.Controllers
             _appSettings = appSettings.Value;
         }
 
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]UserModel userModel)
-        {
-            var user = _userService.Authenticate(userModel.UserName, userModel.Password);
+        //[AllowAnonymous]
+        //[HttpPost("authenticate")]
+        //public IActionResult Authenticate([FromBody]UserModel userModel)
+        //{
+        //    var user = _userService.Authenticate(userModel.UserName, userModel.Password);
 
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+        //    if (user == null)
+        //        return BadRequest(new { message = "Username or password is incorrect" });
 
-            var jwtKey = AppSettingsService.AppSettingsService.Secret;
-            var jwtIssuer = AppSettingsService.AppSettingsService.IssuserName;
-            var jwtAudience = AppSettingsService.AppSettingsService.AudienceName;
-            var jwtExpiry = int.Parse(AppSettingsService.AppSettingsService.ExpiredSecondTime);
+        //    var jwtKey = AppSettingsService.AppSettingsService.Secret;
+        //    var jwtIssuer = AppSettingsService.AppSettingsService.IssuserName;
+        //    var jwtAudience = AppSettingsService.AppSettingsService.AudienceName;
+        //    var jwtExpiry = int.Parse(AppSettingsService.AppSettingsService.ExpiredSecondTime);
 
-            var claims = new List<System.Security.Claims.Claim>
-            {
-                new System.Security.Claims.Claim(TokenClaim.UserId.ToString(), user.Id.ToString()),
-                //new System.Security.Claims.Claim(TokenClaim.IdentyficationGuid.ToString(), user.IdentyficationGuid.ToString()),
-                //new System.Security.Claims.Claim(TokenClaim.IsOperator.ToString(), user.IsOperator.ToString()),
-                //new System.Security.Claims.Claim(TokenClaim.UserRoleId.ToString(), ((int)user.UserType).ToString()),
-                new System.Security.Claims.Claim(ClaimTypes.Name, user.Id.ToString()),
-                new System.Security.Claims.Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        //    var claims = new List<System.Security.Claims.Claim>
+        //    {
+        //        new System.Security.Claims.Claim(TokenClaim.UserId.ToString(), user.Id.ToString()),
+        //        //new System.Security.Claims.Claim(TokenClaim.IdentyficationGuid.ToString(), user.IdentyficationGuid.ToString()),
+        //        //new System.Security.Claims.Claim(TokenClaim.IsOperator.ToString(), user.IsOperator.ToString()),
+        //        //new System.Security.Claims.Claim(TokenClaim.UserRoleId.ToString(), ((int)user.UserType).ToString()),
+        //        new System.Security.Claims.Claim(ClaimTypes.Name, user.Id.ToString()),
+        //        new System.Security.Claims.Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
-            };
+        //    };
 
-            if (user.ClaimsUser != null)
-            {
-                var userClaims = user.ClaimsUser.Split(',').ToList();
-                foreach (var claim in userClaims)
-                {
-                    claims.Add(new System.Security.Claims.Claim("UserClaim", claim));
-                }
-            }
+        //    if (user.ClaimsUser != null)
+        //    {
+        //        var userClaims = user.ClaimsUser.Split(',').ToList();
+        //        foreach (var claim in userClaims)
+        //        {
+        //            claims.Add(new System.Security.Claims.Claim("UserClaim", claim));
+        //        }
+        //    }
 
-            var token = new JwtSecurityToken(
-                issuer: jwtIssuer,
-                audience: jwtAudience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(jwtExpiry),
-                signingCredentials: new SigningCredentials(
-                    JwtSecurityKey.Create(jwtKey),
-                    SecurityAlgorithms.HmacSha256));
-            var ret = new JwtToken(token).Value;
-            return new JwtToken(token).Value;
-        }
+        //    var token = new JwtSecurityToken(
+        //        issuer: jwtIssuer,
+        //        audience: jwtAudience,
+        //        claims: claims,
+        //        expires: DateTime.UtcNow.AddMinutes(jwtExpiry),
+        //        signingCredentials: new SigningCredentials(
+        //            JwtSecurityKey.Create(jwtKey),
+        //            SecurityAlgorithms.HmacSha256));
+        //    var ret = new JwtToken(token).Value;
+        //    return new JwtToken(token).Value;
+        //}
 
         [AllowAnonymous]
         [HttpPost("register")]
@@ -143,21 +143,7 @@ namespace DobrySmaczek.Controllers
             _userService.Delete(id);
             return Ok();
         }
-        //public UserController(DataBaseContext context, IUserService _userService)
-        //{
-        //    this.context = context;
-        //    userService = _userService;
-        //}
-
-
-        //public IActionResult Register()
-        //{
-        //    var output = userService.Register();
-        //    return StatusCode(200, output);
-        //}
-
-
-
+       
 
     }
 }
