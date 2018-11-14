@@ -17,9 +17,6 @@ namespace DobrySmaczek.Entities
         [Required(ErrorMessage = "Wpisz Nazwisko")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Wpisz Nick")]
-        public string UserName { get; set; }
-
         [Required(ErrorMessage = "Wpisz Maila")]
         public string Email { get; set; }
 

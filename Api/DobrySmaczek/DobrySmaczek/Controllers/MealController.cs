@@ -1,11 +1,7 @@
 ﻿using DobrySmaczek.Entities;
-using DobrySmaczek.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace DobrySmaczek.Controllers
 {
@@ -16,17 +12,17 @@ namespace DobrySmaczek.Controllers
         {
             this.context = context;
         }
-        private IQueryable<Models.Meal> MapMeals()
+        private IQueryable<Meal> MapMeals()
         {
             return from m in context.Meals
-                   select new Models.Meal()
+                   select new Meal()
                    { Id = m.Id, Name = m.Name, Price = m.Price, Components = m.Components };
         }
-        public IEnumerable<Models.Meal> GetMeals()
+        public IEnumerable<Meal> GetMeals()
         {
             return MapMeals().AsEnumerable();
         }
-        public Models.Meal GetMeal(int id)
+        public Meal GetMeal(int id)
         {
             var meal = (from p in MapMeals()
                            where p.Id == 1

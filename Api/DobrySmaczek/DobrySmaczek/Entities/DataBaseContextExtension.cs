@@ -1,9 +1,7 @@
-﻿using DobrySmaczek.Models;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DobrySmaczek.Entities
 {
@@ -19,17 +17,17 @@ namespace DobrySmaczek.Entities
                 {
                     var users = new List<AppUser>()
                     {
-                        new AppUser(){FirstName = "Jan", LastName = "Kowalski", UserName = "JaKowal" , Email = "JanKowalski@gmail.com", PhoneNumber = "123456789",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Anna", LastName = "Lubińska", UserName = "Lubi" , Email = "AnnaLubi@gmail.com", PhoneNumber = "555444333",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Marta", LastName = "Mazurkiewicz", UserName = "Mazur" , Email = "Marta.Mazurkiewicz94@gmail.com", PhoneNumber = "333666555",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Marcin", LastName = "Starostecki", UserName = "Cinuś" , Email = "Marcin_Starostec@gmail.com", PhoneNumber = "222333444",UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Paweł", LastName = "Stryjewski", UserName = "Stryju" , Email = "PawelStryju@gmail.com", PhoneNumber = "777555444",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Damian", LastName = "Wiewióra", UserName = " Wiewiórka" , Email = "Damian_Wiewiora@gmail.com", PhoneNumber = "999777666",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Alex", LastName = "Mazurkiewicz", UserName = "MłodyMazur" , Email = "AlexMazur@gmail.com", PhoneNumber = "666544455",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Krystyna", LastName = "Gonera", UserName = "Gonerka" , Email = "KrystynaGonera45@gmail.com", PhoneNumber = "898070505",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Krzysztof", LastName = "Jaszczołt", UserName = "Jaszczołcik999" , Email = "KrzysiuJaszcz@gmail.com", PhoneNumber = "674839475",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Adrianna", LastName = "Jeznach", UserName = "AdriannaJ123" , Email = "JeznachAdrianna@gmail.com", PhoneNumber = "930485748",  UserType=UserType.User} ,
-                        new AppUser(){FirstName = "Michał", LastName = "Prosiak", UserName = "Świnka_1" , Email = "Prosiaczek123@gmail.com", PhoneNumber = "853847323",  UserType=UserType.User}
+                        new AppUser(){FirstName = "Jan", LastName = "Kowalski" , Email = "JanKowalski@gmail.com", PhoneNumber = "123456789",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Anna", LastName = "Lubińska" , Email = "AnnaLubi@gmail.com", PhoneNumber = "555444333",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Marta", LastName = "Mazurkiewicz", Email = "Marta.Mazurkiewicz94@gmail.com", PhoneNumber = "333666555",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Marcin", LastName = "Starostecki", Email = "Marcin_Starostec@gmail.com", PhoneNumber = "222333444",UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Paweł", LastName = "Stryjewski", Email = "PawelStryju@gmail.com", PhoneNumber = "777555444",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Damian", LastName = "Wiewióra", Email = "Damian_Wiewiora@gmail.com", PhoneNumber = "999777666",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Alex", LastName = "Mazurkiewicz", Email = "AlexMazur@gmail.com", PhoneNumber = "666544455",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Krystyna", LastName = "Gonera", Email = "KrystynaGonera45@gmail.com", PhoneNumber = "898070505",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Krzysztof", LastName = "Jaszczołt", Email = "KrzysiuJaszcz@gmail.com", PhoneNumber = "674839475",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Adrianna", LastName = "Jeznach", Email = "JeznachAdrianna@gmail.com", PhoneNumber = "930485748",  UserType=UserType.User} ,
+                        new AppUser(){FirstName = "Michał", LastName = "Prosiak", Email = "Prosiaczek123@gmail.com", PhoneNumber = "853847323",  UserType=UserType.User}
 
                     };
 
@@ -152,7 +150,7 @@ namespace DobrySmaczek.Entities
                     //context.Menus.AddRange.(menus);
                     context.SaveChanges();
                 }
-                catch (Exception ex)
+                catch (Exception  ex)
                 {
                 }
             }

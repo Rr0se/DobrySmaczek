@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DobrySmaczek.Entities;
+﻿using DobrySmaczek.Entities;
+using DobrySmaczek.Services.Search;
 using DobrySmaczek.Services.User;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System;
+using System.Collections.Generic;
 using System.Text;
-using DobrySmaczek.Helpers;
-using DobrySmaczek.Services;
-using AutoMapper;
+using System.Threading.Tasks;
 
 namespace DobrySmaczek
 {
@@ -33,18 +29,12 @@ namespace DobrySmaczek
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-            services.AddDbContext<DataBaseContext>(x => x.UseInMemoryDatabase("TestDb"));
-            services.AddMvc();
-            //services.AddAutoMapper();
-            services.AddTransient<IUserService, IUserService>();
-
             var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
 
-            // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            var connectionString = @"Server=DESKTOP-18VF6FQ\SQLEXPRESS;Database=DbUserGenerator;Trusted_Connection=True;";
+            services.AddDbContext<DataBaseContext>(o => o.UseSqlServer(connectionString));
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -54,16 +44,14 @@ namespace DobrySmaczek
             {
                 x.Events = new JwtBearerEvents
                 {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+                        return Task.CompletedTask;
+                    },
                     OnTokenValidated = context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetById(userId);
-                        if (user == null)
-                        {
-                            // return unauthorized if user no longer exists
-                            context.Fail("Unauthorized");
-                        }
+                        Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
                         return Task.CompletedTask;
                     }
                 };
@@ -71,18 +59,23 @@ namespace DobrySmaczek
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+
+                    NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+                    ValidIssuer = "DobrySmaczek.API",
+                    ValidAudience = "DobrySmaczek.CLIENT",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("BKDGTXZ5DCoAZVsXrPZk8vJwCNi7pRdzHqJMMaxKyX7w3DA5u")),
+                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
                 };
             });
 
             // configure DI for application services
-            services.AddScoped<IUserService, IUserService>();
-
-            var connectionString = @"Server=DESKTOP-18VF6FQ\SQLEXPRESS;Database=DbUserGenerator;Trusted_Connection=True;";
-            services.AddDbContext<DataBaseContext>(o => o.UseSqlServer(connectionString));
+            services.AddScoped<IUserService, UserService>();
+            services.AddTransient<ITokenGenerate, TokenGenerate>();
+            services.AddTransient<ISearchService, SearchService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -111,23 +104,6 @@ namespace DobrySmaczek
                         .SetPreflightMaxAge(TimeSpan.FromSeconds(2520))
                         .Build());
             });
-
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-         .AddJwtBearer(options =>
-         {
-             options.TokenValidationParameters = new TokenValidationParameters
-             {
-                 ValidateIssuer = true,
-                 ValidateAudience = true,
-                 ValidateLifetime = true,
-                 ValidateIssuerSigningKey = true,
-                 ValidIssuer = Configuration["Jwt:Issuer"],
-                 ValidAudience = Configuration["Jwt:Issuer"],
-                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-             };
-         });
-
             services.AddMvc();
         }
 
@@ -157,14 +133,7 @@ namespace DobrySmaczek
                 app.UseDeveloperExceptionPage();
             }
 
-            //AutoMapper.Mapper.Initialize(cfg =>
-            //{
-            //    cfg.CreateMap<Entities.User, Models.Profile>()
-            //        .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
-            //           $"{src.FirstName} {src.LastName} {src.Specialization} {src.YearsOfWork}"));
-
-            //    cfg.CreateMap<InputModels.EmployeeInputModel, Entities.Employee>();
-            //});
+            
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseMvc();

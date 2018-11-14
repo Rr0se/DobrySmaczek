@@ -1,9 +1,6 @@
 ﻿using DobrySmaczek.Entities;
-using DobrySmaczek.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DobrySmaczek.Services.Order
 {
@@ -16,12 +13,12 @@ namespace DobrySmaczek.Services.Order
             _context = context;
         }
 
-        public List<AppOrder> GetAll()
+        public List<Entities.Order> GetAll()
         {
             return _context.Orders.ToList();
         }
 
-        public AppOrder GetById(int id)
+        public Entities.Order GetById(int id)
         {
             return _context.Orders.SingleOrDefault(x => x.Id == id);
 

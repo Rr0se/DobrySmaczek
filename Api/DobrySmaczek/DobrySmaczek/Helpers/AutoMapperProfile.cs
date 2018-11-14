@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DobrySmaczek.Models;
 using DobrySmaczek.Entities;
 
 namespace DobrySmaczek.Helpers
@@ -12,8 +7,7 @@ namespace DobrySmaczek.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<AppUser, UserModel>();
-            CreateMap<UserModel, AppUser>();
+
         }
     }
 }

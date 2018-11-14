@@ -1,182 +1,111 @@
 ﻿using DobrySmaczek.Entities;
-using DobrySmaczek.Helpers;
+using DobrySmaczek.Services.User.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DobrySmaczek.Services.User
-
 {
-    
+
     public class UserService : IUserService
     {
-        private DataBaseContext _context;
+        private readonly DataBaseContext _context;
+        private readonly ITokenGenerate _tokenService;
 
-        public UserService(DataBaseContext context)
+        public UserService(DataBaseContext context, ITokenGenerate tokenService)
         {
             _context = context;
+            _tokenService = tokenService;
         }
 
-        public GlobalServiceModel <AppUser> Authenticate(string UserName, string password)
-            {
-                if (string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(password))
-                    return null;
-
-                var user = _context.AppUsers.SingleOrDefault(x => x.UserName == UserName);
-
-                // check if username exists
-                if (user == null)
-                    return null;
-
-                // check if password is correct
-                if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                    return null;
-
-            // authentication successful
-            return new GlobalServiceModel<AppUser>
-            {
-                ServiceResponse = ServiceResponseEnum.Ok
-            };
-        }
-
-        public GlobalServiceModel<IEnumerable<AppUser>> GetAll()
+        public GlobalServiceModel<LoginOutputViewModel> Login(string email, string password)
         {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                return null;
 
-            return new GlobalServiceModel<IEnumerable<AppUser>>
+            var user = _context.AppUsers.FirstOrDefault(x => x.Email == email);
+
+            // check if username exists
+            if (user == null)
+                return new GlobalServiceModel<LoginOutputViewModel> { ServiceResponse = ServiceResponseEnum.Failed, Message = "User not found"};
+
+            // check if password is correct
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+                return new GlobalServiceModel<LoginOutputViewModel> { ServiceResponse = ServiceResponseEnum.Failed, Message = "Wrong password" };
+
+            var token = _tokenService.TokenAuthenticateGenerate(user);
+
+            return new GlobalServiceModel<LoginOutputViewModel>
             {
-                ServiceResponse = ServiceResponseEnum.Ok
-
+                ServiceResponse = ServiceResponseEnum.Ok,
+                Response = new LoginOutputViewModel
+                {
+                    Token = token
+                }
             };
         }
-                
 
-            public GlobalServiceModel <AppUser> GetById(int id)
+        public GlobalServiceModel Register(UserInputViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Password))
+                return new GlobalServiceModel { ServiceResponse = ServiceResponseEnum.Failed, Message = "Password is required" };
+
+            if (_context.AppUsers.Any(x => x.Email == model.Email))
+                return new GlobalServiceModel { ServiceResponse = ServiceResponseEnum.Failed, Message = "Username \"" + model.Email + "\" is already taken" };
+
+            CreatePasswordHash(model.Password, out var passwordHash, out var passwordSalt);
+
+            var userEntity = new AppUser
             {
-            return new GlobalServiceModel<AppUser>
-            {
-                ServiceResponse = ServiceResponseEnum.Ok
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                PhoneNumber = model.PhoneNumber,
+                PostCode = model.PostCode,
+                City = model.City,
+                Street = model.Street,
+                HouseNumber = model.HouseNumber,
+                UserType = UserType.User
             };
+
+            _context.AppUsers.Add(userEntity);
+            _context.SaveChanges();
+
+            return new GlobalServiceModel { ServiceResponse = ServiceResponseEnum.Ok };
+        }
+
+
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            if (password == null) throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
-
-            public GlobalServiceModel <AppUser> Create(AppUser user, string password)
-            {
-                // validation
-                if (string.IsNullOrWhiteSpace(password))
-                    throw new AppException("Password is required");
-
-                if (_context.AppUsers.Any(x => x.UserName == user.UserName))
-                    throw new AppException("Username \"" + user.UserName + "\" is already taken");
-
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-
-                _context.AppUsers.Add(user);
-                _context.SaveChanges();
-
-            return new GlobalServiceModel<AppUser>
-            {
-                ServiceResponse = ServiceResponseEnum.Ok
-            };
         }
 
-            public GlobalServiceModel Update(AppUser userParam, string password = null)
+        private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+        {
+            if (password == null) throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
+            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
             {
-                var user = _context.AppUsers.Find(userParam.Id);
-
-                if (user == null)
-                    throw new AppException("User not found");
-
-                if (userParam.UserName != user.UserName)
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
                 {
-                    // username has changed so check if the new username is already taken
-                    if (_context.AppUsers.Any(x => x.UserName == userParam.UserName))
-                        throw new AppException("Username " + userParam.UserName + " is already taken");
-                }
-
-                // update user properties
-                user.FirstName = userParam.FirstName;
-                user.LastName = userParam.LastName;
-                user.UserName = userParam.UserName;
-
-                // update password if it was entered
-                if (!string.IsNullOrWhiteSpace(password))
-                {
-                    byte[] passwordHash, passwordSalt;
-                    CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-                    user.PasswordHash = passwordHash;
-                    user.PasswordSalt = passwordSalt;
-                }
-
-                _context.AppUsers.Update(user);
-                _context.SaveChanges();
-
-            return new GlobalServiceModel
-            {
-                ServiceResponse = ServiceResponseEnum.Ok
-            };
-        }
-
-            public GlobalServiceModel Delete(int id)
-            {
-                var user = _context.AppUsers.Find(id);
-                if (user != null)
-                {
-                    _context.AppUsers.Remove(user);
-                    _context.SaveChanges();
-                }
-
-            return new GlobalServiceModel
-            {
-                ServiceResponse = ServiceResponseEnum.Ok
-            };
-        }
-
-            // private helper methods
-
-            private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-            {
-                if (password == null) throw new ArgumentNullException("password");
-                if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
-
-                using (var hmac = new System.Security.Cryptography.HMACSHA512())
-                {
-                    passwordSalt = hmac.Key;
-                    passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                    if (computedHash[i] != storedHash[i]) return false;
                 }
             }
 
-            private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
-            {
-                if (password == null) throw new ArgumentNullException("password");
-                if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
-                if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
-                if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
-
-                using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
-                {
-                    var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                    for (int i = 0; i < computedHash.Length; i++)
-                    {
-                        if (computedHash[i] != storedHash[i]) return false;
-                    }
-                }
-
-                return true;
-            }
-
-        public GlobalServiceModel Create1(AppUser user, string password)
-        {
-            throw new NotImplementedException();
+            return true;
         }
-
-        public GlobalServiceModel Update1(AppUser user, string password)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
