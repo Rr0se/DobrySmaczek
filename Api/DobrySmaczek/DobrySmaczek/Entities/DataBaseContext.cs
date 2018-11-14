@@ -19,7 +19,13 @@ namespace DobrySmaczek.Entities
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<InfoOfRestaurant> InfoOfRestaurants { get; set; }
+
+
         public DbSet<UserOrder> UserOrders  { get; set; }
+        public DbSet<RestaurantCategoryFood> RestaurantCategoryFoods { get; set; }
+        public DbSet<RestaurantMenu> RestaurantMenus { get; set; }
+        public DbSet<RestaurantInfoOfRestaurant> RestaurantInfoOfRestaurants { get; set; }
+        public DbSet<RestaurantReview> RestaurantReviews { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

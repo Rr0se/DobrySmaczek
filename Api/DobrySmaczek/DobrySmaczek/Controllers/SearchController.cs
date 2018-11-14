@@ -19,7 +19,7 @@ namespace DobrySmaczek.Controllers
         }
 
         [HttpGet("search")]
-        public IActionResult Register(double lat, double lon)
+        public IActionResult Search(double lat, double lon)
         {
             var response = _searchService.SearchRestaurant(lat, lon);
             if (response.ServiceResponse != ServiceResponseEnum.Ok)
