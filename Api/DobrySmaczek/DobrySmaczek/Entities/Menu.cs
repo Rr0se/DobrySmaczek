@@ -10,9 +10,6 @@ namespace DobrySmaczek.Entities
         public int Id { get; set; }
         public List<Meal> Meals { get; set; }
 
-        public ICollection<MenuMeal> MenuMeals { get; set; }
-        public ICollection<MenuTypeOfFood> MenuTypeOfFoods { get; set; }
-
         public Restaurant Restaurant { get; set; }
 
     }

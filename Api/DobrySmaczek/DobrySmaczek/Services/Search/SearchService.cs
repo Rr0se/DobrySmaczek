@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DobrySmaczek.Entities;
 using DobrySmaczek.Services.Search.Models;
 using DobrySmaczek.Services.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace DobrySmaczek.Services.Search
 {
@@ -17,9 +18,21 @@ namespace DobrySmaczek.Services.Search
             _context = context;
         }
 
+        private bool isOpen(Entities.Restaurant restaurant)
+        {
+            var openingHours = restaurant.OpeningHours;
+
+            var todayOpeningHours = openingHours?.FirstOrDefault(o => o.DayOfWeek == DateTime.Now.DayOfWeek);
+            if (todayOpeningHours == null)
+                return false;
+
+            return todayOpeningHours.Open.TimeOfDay < DateTime.Now.TimeOfDay &&
+                   todayOpeningHours.Close.TimeOfDay > DateTime.Now.TimeOfDay;
+        }
+
         public GlobalServiceModel<SearchRestaurantOutputViewModel> SearchRestaurant(double lat, double lon)
         {
-            var allRestaurants = _context.Restaurants.ToList();
+            var allRestaurants = _context.Restaurants.Include(r => r.OpeningHours).ToList();
 
             var foundRestaurants = new List<RestaurantListViewModel>();
             foreach (var restaurant in allRestaurants)
@@ -28,7 +41,12 @@ namespace DobrySmaczek.Services.Search
                 if(distance <= restaurant.Radius)
                     foundRestaurants.Add(new RestaurantListViewModel
                     {
-                        Name = restaurant.Name
+                        Name = restaurant.Name,
+                        DeliveryCosts = restaurant.DeliveryCosts,
+                        EstimatedDeliveryTime = restaurant.EstimatedDeliveryTime,
+                        MinOrderAmount = restaurant.MinOrderAmount,
+                        Rating = restaurant.Rating,
+                        IsOpen = isOpen(restaurant)
                     });
             }
 

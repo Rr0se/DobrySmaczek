@@ -18,13 +18,13 @@ namespace DobrySmaczek.Entities
         public DbSet<Order> Orders { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Meal> Meals { get; set; }
-        public DbSet<InfoOfRestaurant> InfoOfRestaurants { get; set; }
+        public DbSet<OpeningHours> OpeningHours { get; set; }
 
 
+        public DbSet<MealAddition> MealAdditions { get; set; }
         public DbSet<UserOrder> UserOrders  { get; set; }
         public DbSet<RestaurantCategoryFood> RestaurantCategoryFoods { get; set; }
         public DbSet<RestaurantMenu> RestaurantMenus { get; set; }
-        public DbSet<RestaurantInfoOfRestaurant> RestaurantInfoOfRestaurants { get; set; }
         public DbSet<RestaurantReview> RestaurantReviews { get; set; }
 
 
@@ -48,33 +48,11 @@ namespace DobrySmaczek.Entities
                 .HasForeignKey(pc => pc.CategoryFoodId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //---------------------------------------------
-
-            modelBuilder.Entity<MenuMeal>()
-                .HasIndex(u => new { u.MenuId, u.MealId });
-
-            modelBuilder.Entity<MenuMeal>()
-                .HasOne(pe => pe.Menu)
-                .WithMany(p => p.MenuMeals)
-                .HasForeignKey(pc => pc.MenuId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<MenuMeal>()
-                .HasOne(pe => pe.Meal)
-                .WithMany(p => p.MenuMeals)
-                .HasForeignKey(pc => pc.MealId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             //---------------------------------------------
 
             modelBuilder.Entity<MenuTypeOfFood>()
-                .HasIndex(u => new { u.MenuId, u.TypeOfFoodId });
-
-            modelBuilder.Entity<MenuTypeOfFood>()
-                .HasOne(pe => pe.Menu)
-                .WithMany(p => p.MenuTypeOfFoods)
-                .HasForeignKey(pc => pc.MenuId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasIndex(u => new { u.MenuId, u.TypeOfFoodId });          
 
             modelBuilder.Entity<MenuTypeOfFood>()
                 .HasOne(pe => pe.TypeOfFood)

@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace DobrySmaczek.Services.Restaurant.Models
 {
-    public class MenuOutputViewModel
+    public class MealViewModel
     {
         public int Id { get; set; }
-        public List<MenuListViewModel> Menus { get; set; }
-    }
-
-    public class MenuListViewModel
-    {
-        public int Id { get; set; }
-        public List<Meal> Meals { get; set; }
+        public string Name { get; set; }
+        public string Components { get; set; }
+        public decimal Price { get; set; }
+        public string TypeOfFood { get; set; }
     }
 }

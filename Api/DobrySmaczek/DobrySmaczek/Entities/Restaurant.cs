@@ -16,15 +16,18 @@ namespace DobrySmaczek.Entities
         public double MinOrderAmount { get; set; }
         public double DeliveryCosts { get; set; }
 
+        public string Address { get; set; }
         public double Long { get; set; }
         public double Lat { get; set; }
         public double Radius { get; set; }
 
 
         public Menu Menu { get; set; }
-        public InfoOfRestaurant InfoOfRestaurants { get; set; }
         public List<Review> Reviews { get; set; }
 
+
+        public ICollection<MealAddition> MealAdditions { get; set; }
+        public ICollection<OpeningHours> OpeningHours { get; set; }
         public ICollection<RestaurantCategoryFood> RestaurantCategoryFoods { get; set; }
         //public ICollection<RestaurantInfoOfRestaurant> RestaurantInfoOfRestaurants { get; set; }
         //public ICollection<RestaurantMenu> RestaurantMenus { get; set; }

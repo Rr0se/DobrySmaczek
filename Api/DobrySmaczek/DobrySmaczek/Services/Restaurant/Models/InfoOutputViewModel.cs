@@ -7,21 +7,25 @@ namespace DobrySmaczek.Services.Restaurant.Models
 {
     public class InfoOutputViewModel
     {
-        public int Id { get; set; }
-        public List<InfoListViewModel> Infos { get; set; }
+        public IList<OpeningViewModel> OpeningViewModel { get; set; }
+        public LocationViewModel LocationViewModel { get; set; }
+        public double EstimatedDeliveryTime { get; set; }
+        public double MinOrderAmount { get; set; }
+        public double DeliveryCosts { get; set; }
     }
 
-    public class InfoListViewModel
+    public class OpeningViewModel
     {
-        public int Id { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
         public DateTime Open { get; set; }
         public DateTime Close { get; set; }
-        public double DeliveryCosts { get; set; }
-        public double MinOrderAmount { get; set; }
-        public string PostCode { get; set; }
-        public string City { get; set; }
-        public string Street { get; set; }
-        public string HouseNumber { get; set; }
-        public string PhoneNumber { get; set; }
+        public bool IsCurrent { get; set; }
+    }
+
+    public class LocationViewModel
+    {
+        public string Address { get; set; }
+        public double Lat { get; set; }
+        public double Lon { get; set; }
     }
 }

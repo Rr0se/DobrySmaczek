@@ -17,5 +17,6 @@ namespace DobrySmaczek.Services.Search.Models
         public double EstimatedDeliveryTime { get; set; }
         public double MinOrderAmount { get; set; }
         public double DeliveryCosts { get; set; }
+        public bool IsOpen { get; set; }
     }
 }

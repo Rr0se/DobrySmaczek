@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using DobrySmaczek.Services.Meal;
+using DobrySmaczek.Services.Restaurant;
 
 namespace DobrySmaczek
 {
@@ -76,6 +78,8 @@ namespace DobrySmaczek
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<ITokenGenerate, TokenGenerate>();
             services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IRestaurantService, RestaurantService>();
+            services.AddTransient<IMealService, MealService>();
 
             services.AddSwaggerGen(c =>
             {

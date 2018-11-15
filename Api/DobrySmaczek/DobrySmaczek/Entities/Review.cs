@@ -11,6 +11,7 @@ namespace DobrySmaczek.Entities
         public int RatingDelivery { get; set; }
         public int RatingFood { get; set; }
         public int UserId { get; set; }
+        public string TextReview { get; set; }
 
         public Restaurant Restaurant { get; set; }
     }

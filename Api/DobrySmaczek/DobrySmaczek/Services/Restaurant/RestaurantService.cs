@@ -18,25 +18,83 @@ namespace DobrySmaczek.Services.Restaurant
             _context = context;
         }
         
-        public GlobalServiceModel<CategoryOutputViewModel> GetCategory(int restaurantId)
+        public GlobalServiceModel<List<CategoryListViewModel>> GetCategories(int restaurantId)
         {
-            return _context.CategoryFoods.Include(x => x.CategoryOutputViewModel).ThenInclude(z => z.Restaurant)
-                .Where(b => b.CategoryOutputViewModel.Any(x => x.RestaurantId == restaurantId)).Orderby().ToListy();
+            var restaurant = _context.Restaurants.Include(r => r.Menu).ThenInclude(m => m.Meals).FirstOrDefault(r => r.Id == restaurantId);
+            if(restaurant == null)
+                return new GlobalServiceModel<List<CategoryListViewModel>> { ServiceResponse = ServiceResponseEnum.Failed };
+
+            var categories = restaurant.Menu.Meals.Select(m => m.TypeOfFood).Distinct();
+
+            var output = categories.Select(c => new CategoryListViewModel {Id = c.Id, Name = c.Name}).ToList();
+
+            return new GlobalServiceModel<List<CategoryListViewModel>> { ServiceResponse = ServiceResponseEnum.Ok, Response = output };
         }
 
-        public GlobalServiceModel<InfoOutputViewModel> GetInfo(int RestaurantId, int InfoOfRestaurantId)
+        public GlobalServiceModel<InfoOutputViewModel> GetInfo(int restaurantId)
         {
-            throw new NotImplementedException();
+            var restaurant = _context.Restaurants.Include(r => r.OpeningHours)
+                .FirstOrDefault(r => r.Id == restaurantId);
+            if(restaurant == null)
+                return new GlobalServiceModel<InfoOutputViewModel> { ServiceResponse = ServiceResponseEnum.Failed };
+
+            var opening = restaurant.OpeningHours.Select(o =>
+                new OpeningViewModel
+                {
+                    DayOfWeek = o.DayOfWeek, Open = o.Open, Close = o.Close,
+                    IsCurrent = o.DayOfWeek == DateTime.Now.DayOfWeek
+                }).ToList();
+
+            var location = new LocationViewModel
+            {
+                Address = restaurant.Address,
+                Lat = restaurant.Lat,
+                Lon = restaurant.Long
+            };
+
+            var output = new InfoOutputViewModel
+            {
+                OpeningViewModel = opening,
+                LocationViewModel = location,
+                DeliveryCosts = restaurant.DeliveryCosts,
+                EstimatedDeliveryTime = restaurant.EstimatedDeliveryTime,
+                MinOrderAmount = restaurant.MinOrderAmount
+            };
+
+            return new GlobalServiceModel<InfoOutputViewModel> { ServiceResponse = ServiceResponseEnum.Ok, Response = output };
         }
 
-        public GlobalServiceModel<MenuOutputViewModel> GetMenu(int RestaurantId, int MenuId)
+        public GlobalServiceModel<List<MealViewModel>> GetMenu(int restaurantId, int? typeOfFoodId)
         {
-            throw new NotImplementedException();
+            var restaurant = _context.Restaurants.Include(r => r.Menu).ThenInclude(m => m.Meals)
+                    .FirstOrDefault(r => r.Id == restaurantId);
+            if(restaurant == null)
+                return new GlobalServiceModel<List<MealViewModel>> { ServiceResponse = ServiceResponseEnum.Failed};
+
+            var output = restaurant.Menu.Meals.Select(meal =>
+                new MealViewModel
+                {
+                    Id = meal.Id, Name = meal.Name, Components = meal.Components, Price = meal.Price,
+                    TypeOfFood = meal.TypeOfFood.ToString()
+                }).ToList();
+            return new GlobalServiceModel<List<MealViewModel>> { ServiceResponse = ServiceResponseEnum.Ok, Response = output };
         }
 
-        public GlobalServiceModel<ReviewOutputViewModel> GetReview(int RestaurantId, int ReviewId)
+        public GlobalServiceModel<List<ReviewOutputViewModel>> GetReview(int restaurantId)
         {
-            throw new NotImplementedException();
+            var restaurant = _context.Restaurants.Include(r => r.Reviews).FirstOrDefault(r => r.Id == restaurantId);
+
+            if(restaurant == null)
+                return new GlobalServiceModel<List<ReviewOutputViewModel>> { ServiceResponse = ServiceResponseEnum.Failed };
+
+            var output = restaurant.Reviews.Select(review => new ReviewOutputViewModel
+            {
+                RatingDelivery = review.RatingDelivery,
+                RatingFood = review.RatingFood,
+                Review = review.TextReview
+            }).ToList();
+
+            return new GlobalServiceModel<List<ReviewOutputViewModel>> { ServiceResponse = ServiceResponseEnum.Ok, Response = output };
         }
         
 

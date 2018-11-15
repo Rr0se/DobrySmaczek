@@ -13,7 +13,8 @@ namespace DobrySmaczek.Entities
         public decimal  Price { get; set; }
         public TypeOfFood TypeOfFood { get; set; }
 
-        public ICollection<MenuMeal> MenuMeals { get; set; }
+        public ICollection<MealAddition> MealAdditions { get; set; }
+        public Restaurant Restaurant { get; set; }
     }
 
     

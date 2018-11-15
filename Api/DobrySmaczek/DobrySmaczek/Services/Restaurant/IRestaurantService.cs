@@ -10,10 +10,10 @@ namespace DobrySmaczek.Services.Restaurant
 {
     public interface IRestaurantService
     {
-        GlobalServiceModel<MenuOutputViewModel> GetMenu(int RestaurantId, int MenuId);
-        GlobalServiceModel<CategoryOutputViewModel> GetCategory(int RestaurantId, int CategoryFoodId);
-        GlobalServiceModel<ReviewOutputViewModel> GetReview(int RestaurantId, int ReviewId);
-        GlobalServiceModel<InfoOutputViewModel> GetInfo(int RestaurantId, int InfoOfRestaurantId);
+        GlobalServiceModel<List<MealViewModel>> GetMenu(int restaurantId, int? typeOfFoodId);
+        GlobalServiceModel<List<CategoryListViewModel>> GetCategories(int restaurantId);
+        GlobalServiceModel<List<ReviewOutputViewModel>> GetReview(int restaurantId);
+        GlobalServiceModel<InfoOutputViewModel> GetInfo(int restaurantId);
        
     }
 }
